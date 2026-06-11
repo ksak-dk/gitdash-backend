@@ -14,8 +14,8 @@ services:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://postgres:password@postgres-db:5432/gitdash
       - REDIS_URL=redis://redis-cache:6379
-      - GITHUB_APP_CLIENT_ID=${GITHUB_APP_CLIENT_ID}
-      - GITHUB_APP_CLIENT_SECRET=${GITHUB_APP_CLIENT_SECRET}
+      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
     depends_on:
       - postgres-db
       - redis-cache
