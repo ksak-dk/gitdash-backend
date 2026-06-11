@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  gitdash-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:password@postgres-db:5432/gitdash
+      - REDIS_URL=redis://redis-cache:6379
+      - GITHUB_APP_CLIENT_ID=${GITHUB_APP_CLIENT_ID}
+      - GITHUB_APP_CLIENT_SECRET=${GITHUB_APP_CLIENT_SECRET}
+    depends_on:
+      - postgres-db
+      - redis-cache
+    networks:
+      - gitdash-network
+
+  postgres-db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=gitdash
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - gitdash-network
+
+  redis-cache:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    networks:
+      - gitdash-network
+
+networks:
+  gitdash-network:
+    driver: bridge
+
+volumes:
+  pgdata:
+  redisdata:
